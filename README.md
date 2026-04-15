@@ -42,12 +42,17 @@ This python program will cycle through your CivitAI posts and images, refreshing
 # NOTES
 
 I am *NOT* a programmer!
+
 I wrote this using Google Gemini to generate the code. It is 99% Gemini and 1% my tweaks.
+
 I cannot support this code in any way.
+
 I tested this code on my own CivitAI account. It worked for me quite well. I can't guarantee it will work for you. I only have one account to test it on. That's not a big sample size.
+
 I hope you find this useful. That's why I shared it. I found CivitAI's lack of a resource refresh on a grand scale to be frustrating, so this is my fix/work-around.
 
 Why is this useful?
+
 A while back - maybe spring or summer of 2025 - maybe as late as fall of 2025 - CivitAI's automatic resource detection upon-upload of an image was broken, and thousands of images were uploaded without resources in their data. What does that mean? It means those images won't appear on the checkpoint, LORA, or embeddings pages, which, in general means no one will ever see those images. (The only way to find them, short of going to the user's profile page, would be to search by tag or keyword, and most users don't do that.
 
 The real purpose of this script is to repair that broken link between your images and the resources used to create them, so your images appear on those resource pages. That way others can see them, like/comment/share/remix and do all those wonderful things that CivitAI lets you do with images - improving your work's visbility and 'driving engagement' (as the kids these days say).
@@ -55,4 +60,4 @@ The real purpose of this script is to repair that broken link between your image
 SIDENOTE: I notice when using this program that MANY of my images - even ones outside the timeframe listed above were missing resources! This fixed it. Yes, it's likely too-little too-late to actually 'drive engagement' on those images, but at least they're properly linked now and will show up on those resource pages the way they're supposed to.
 
 ## License
-GPL 3.0
+GNU General Public License v3.0
