@@ -31,8 +31,9 @@ This python program will cycle through your CivitAI posts and images, refreshing
 8. Let the program do it's work.
    - Be patient.
    - Do NOT scroll in the Chromium window or click on anything.
-   - Go do something else and leave it alone.
-   - It will scroll down your Posts page, taking its time to allow CivitAI's site to keep up.
+   - Do NOT minimize the Chromium window!
+   - You can use other applications normally, just leave the Powershell and Chromium window operating in the background.
+   - The program will scroll down your Posts page, taking its time to allow CivitAI's site to keep up.
    - Then once it gets to the bottom of your Posts page, it will scrape the info for each post, and begin to iterate through each post, editing the post.
    - It will check the each image in that post for lack of resources. If it finds any lacking, it will click the Refresh button in the Resources card, thus populating that images resources.
    - It will carry on down through the images in that post. When it's done with that post, it will go to the next post. And so on until it has processed all your posts and images.
