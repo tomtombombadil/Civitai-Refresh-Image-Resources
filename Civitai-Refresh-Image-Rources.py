@@ -61,7 +61,7 @@ def process_civitai_profile():
 
     # 4. Initialize Logging
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_filename = f"CivitaiRefreshLog_{timestamp}.txt"
+    log_filename = f"Civitai-Refresh-Image-Resources_{timestamp}.txt"
     
     def write_log(message):
         # Print to console and append to log file simultaneously
