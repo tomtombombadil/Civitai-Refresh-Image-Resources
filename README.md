@@ -3,11 +3,11 @@
 This python program will cycle through your CivitAI posts and images, refreshing the Resource detection on images without resources listed. This corrects a problem CivitAI had for a while back in 2025.
 
 ## Features
-•	Interactive Setup: No need to edit the code. The script asks for your username, preferred domain (.com or .red), and desired window size right in the terminal.
-•	Smart Detection: It doesn't blindly click every button. It reads the page and only triggers a refresh on images displaying the "resources could not be matched" warning, saving time and reducing server load.
-•	Detailed Logging: Automatically generates a timestamped .txt log file in your folder, detailing exactly how many posts were checked, which images were refreshed, and which were skipped.
-•	Persistent Login: Saves your session data locally. You only have to log in to Civitai once.
-•	Infinite Scroll Handling: Automatically pages through massive galleries by simulating natural keyboard scrolling.
+-	Interactive Setup: No need to edit the code. The script asks for your username, preferred domain (.com or .red), and desired window size right in the terminal.
+-	Smart Detection: It doesn't blindly click every button. It reads the page and only triggers a refresh on images displaying the "resources could not be matched" warning, saving time and reducing server load.
+-	Detailed Logging: Automatically generates a timestamped .txt log file in your folder, detailing exactly how many posts were checked, which images were refreshed, and which were skipped.
+-	Persistent Login: Saves your session data locally. You only have to log in to Civitai once.
+-	Infinite Scroll Handling: Automatically pages through massive galleries by simulating natural keyboard scrolling.
 
 ## Requirements
 - Python 3.10+ (You likely already have this, since every local AI image generator I know of requires Python)
