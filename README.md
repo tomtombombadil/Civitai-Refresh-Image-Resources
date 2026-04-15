@@ -37,7 +37,7 @@ This python program will cycle through your CivitAI posts and images, refreshing
    - It will check the each image in that post for lack of resources. If it finds any lacking, it will click the Refresh button in the Resources card, thus populating that images resources.
    - It will carry on down through the images in that post. When it's done with that post, it will go to the next post. And so on until it has processed all your posts and images.
    - When it is done it will write a summary to the LOG file in that same folder as the program. This will tell you how many posts it worked on, how many images, etc. This is so you can verify that it did everything against the numbers shown on CivitAI in your profile for your number of posts and number of images. The totals should match.
-9. You can stop the program early by closing the Powershell window, but this will truncate your log and not give you the summary information at the end. You can safely start the program again later, but it will process your posts in order again. But fortunately, it will only click the Refresh Resources button on images that need it. So at least it doesn't re-do all that work.
+9. You can stop the program early by closing the Powershell window, but this will truncate your log and not give you the summary information at the end. You can safely start the program again later, but it will process your posts in order again. Fortunately, it will only click the Refresh Resources button on images that need it (not the ones it has already done in previous runs). So at least it doesn't re-do all that work.
 
 # NOTES
 
