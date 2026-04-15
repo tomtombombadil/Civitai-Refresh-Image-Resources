@@ -31,7 +31,8 @@ This python program will cycle through your CivitAI posts and images, refreshing
 8. Let the program do it's work. Be patient. It will scroll down your Posts page, taking its time to allow CivitAI's site to keep up. Then once it gets to the bottom of your Posts page, it will scrape the info for each post, and begin to iterate through each post, editing the post, checking the each image in that post for lack of resources. If it finds any, it will click the Refresh button in the Resources card, thus populating that images resources. Then it will carry on down through the images in that post. When it's done with that post, it will go to the next post. And so on until it has processed all your posts and images.
 9. You can stop the program early by closing the Powershell window, but this will truncate your log and not give you the summary information at the end. You can safely start the program again later, but it will process your posts in order again. But fortunately, it will only click the Refresh Resources button on images that need it. So at least it doesn't re-do all that work.
 
-#NOTES
+# NOTES
+
 I am *NOT* a programmer!
 I wrote this using Google Gemini to generate the code. It is 99% Gemini and 1% my tweaks.
 I cannot support this code in any way.
