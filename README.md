@@ -16,8 +16,8 @@ This python program will cycle through your CivitAI posts and images, refreshing
 ## Installation
 1. Clone the repo
 2. Create a venv: `python -m venv .venv`
-3. Activate: `.venv\Scripts\Activate.ps1`
-4. Install deps: `python -m pip install -r requirements.txt` alternatively just install Playwright `pip install playwright`
+3. Activate your venv: `.venv\Scripts\Activate.ps1`
+4. Install dependencies: `python -m pip install -r requirements.txt` alternatively just install Playwright `pip install playwright`
 5. Install Chromium browswer for Playwright: `playwright install chromium`
 
 ## Usage
