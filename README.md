@@ -16,7 +16,7 @@ This python program will cycle through your CivitAI posts and images, refreshing
 ## Installation
 1. Clone the repo (Or just download the .py file and the requirements.txt files, put them in a folder to be used just for this program, then open Powershell and change to that new folder)
 2. Create a venv for this repo: `python -m venv .venv` (This is so what happens in this Python instance doesn't imapact anything else you're doing in Python on your machine, like AI image generation)
-3. Activate your venv: `.venv\Scripts\Activate.ps1` (Do this before you run the program any time you close that initial Powershell window)
+3. Activate your venv: `.venv\Scripts\Activate.ps1` (Do this before you run the program any time you open a new Powershell window to use this program)
 4. Install dependencies: `python -m pip install -r requirements.txt` alternatively just install Playwright `pip install playwright`
 5. Install Chromium browswer for Playwright: `playwright install chromium`
 
