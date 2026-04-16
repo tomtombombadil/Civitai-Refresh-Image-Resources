@@ -1,78 +1,117 @@
+# Civitai-Refresh-Image-Resources.py
+# 2026-04-16 v0.2-beta by tomtombombadil using Gemini Pro
+# This code is designed to automate refreshing the detected resources on CivitAI.com (and .red) for your user's posted images.
+# Often times, CivitAI's post images code fails to detect an image's resouces upon first load. Other times, somehow, CivitAI
+# 'forgets' these resouces. This is unfortunate because that means your image is no longer tied to the models/LORAs/embeddings
+# that were used to create it, and more importantly, your images will not appear on those resource pages for others to see.
+# This code automates the process of refreshing those resource detections, re-linking your images to those resources and
+# restoring your images visibility to more users of the site.
+#
 from playwright.sync_api import sync_playwright
 import time
-import re
 import datetime
 import os
+import json
 
 # =========================================================
 # SELECTORS AND CONSTANTS
 # =========================================================
 IMAGE_CARD_CONTAINER_SELECTOR = "div.rounded-lg.p-3:has(h3:has-text('Resources'))"
 WARNING_TEXT = "Some resources detected in this image could not be matched to models on Civitai"
+CONFIG_FILE = "config.json"
+
+def load_config():
+    if os.path.exists(CONFIG_FILE):
+        try:
+            with open(CONFIG_FILE, "r") as f:
+                return json.load(f)
+        except:
+            return None
+    return None
+
+def save_config(config_data):
+    with open(CONFIG_FILE, "w") as f:
+        json.dump(config_data, f, indent=4)
 
 def process_civitai_profile():
-    print("\n--- Civitai Resource Auto-Refresher Setup ---")
+    print("\n--- Civitai Resource Auto-Refresher ---")
     
-    # 1. Domain Selection
-    print("\nWhich domain are you targeting?")
-    print("1. civitai.com (Standard)")
-    print("2. civitai.red (Adult/NSFW)")
-    domain_choice = input("Enter choice (1 or 2) [Default 1]: ").strip()
-    base_domain = "civitai.red" if domain_choice == "2" else "civitai.com"
+    config = load_config()
+    use_saved = False
+    
+    if config:
+        print("\n--- Saved Settings Found ---")
+        print(f" Domain:   {config.get('base_domain')}")
+        print(f" Username: {config.get('username')}")
+        print(f" Resolution: {config.get('res_label', 'Custom')}")
+        
+        choice = input("\nUse these saved settings? (y/n): ").lower().strip()
+        if choice == 'y':
+            use_saved = True
 
-    # 2. Username Input
-    username = input("\nEnter your Civitai username: ").strip()
-    if not username:
-        print("Username cannot be blank. Exiting.")
-        return
-    target_url = f"https://{base_domain}/user/{username}/posts"
+    if not use_saved:
+        print("\nWhich domain are you targeting?")
+        print("1. civitai.com (Standard)")
+        print("2. civitai.red (Adult/NSFW)")
+        domain_choice = input("Enter choice (1 or 2) [Default 1]: ").strip()
+        base_domain = "civitai.red" if domain_choice == "2" else "civitai.com"
 
-    # 3. Window Size Selection
-    print("\nWhile Playwright is processing your posts and images, a special Chromium")
-    print("browswer window will open, displaying the CivitAI site and your posts,")
-    print("as it scrapes and processes the images and resource settings:")
-    print("YOU MUST LEAVE THIS WINDOW OPEN AND NOT MINIMIZED!")
-    print("You can drag it out of the way, or put it behind other windows and continue")
-    print("using your computer normally. Just don't minimize the Chromium window,")
-    print("close it, or otherwise click/scroll in the Chromium window.")
-    print("\nWith that in mind, how big would you like the browser window to be?")
-    print("(The display portion of the window can't be resized.)")
-    print("1. 720p (1280x720) - default")
-    print("2. 1080p (1920x1080)")
-    print("3. Maximized (Full Screen)")
-    print("4. Custom Dimensions")
-    size_choice = input("Enter choice (1-4) [Default 1]: ").strip()
+        username = input("\nEnter your Civitai username: ").strip()
+        if not username: return
 
-    viewport_settings = {"width": 1280, "height": 720}
-    browser_args = ["--disable-blink-features=AutomationControlled"]
+        print("\nSelect Browser Window Size:")
+        print("1. Default (1280x720)")
+        print("2. 1080p (1920x1080)")
+        print("3. Maximized (Full Screen)")
+        print("4. Custom Dimensions")
+        size_choice = input("Enter choice (1-4) [Default 1]: ").strip()
 
-    if size_choice == "2":
-        viewport_settings = {"width": 1920, "height": 1080}
-    elif size_choice == "3":
-        viewport_settings = None  # None allows the maximized flag to take over
-        browser_args.append("--start-maximized")
-    elif size_choice == "4":
-        try:
-            w = int(input("   Enter width (e.g., 1600): "))
-            h = int(input("   Enter height (e.g., 900): "))
-            viewport_settings = {"width": w, "height": h}
-        except ValueError:
-            print("   Invalid input. Defaulting to 1280x720.")
+        viewport_settings = {"width": 1280, "height": 720}
+        browser_args = ["--disable-blink-features=AutomationControlled"]
+        res_label = "Default"
 
-    # 4. Initialize Logging
+        if size_choice == "2":
+            viewport_settings = {"width": 1920, "height": 1080}
+            res_label = "1080p"
+        elif size_choice == "3":
+            viewport_settings = None  
+            browser_args.append("--start-maximized")
+            res_label = "Maximized"
+        elif size_choice == "4":
+            try:
+                w = int(input("   Enter width (e.g., 1600): "))
+                h = int(input("   Enter height (e.g., 900): "))
+                viewport_settings = {"width": w, "height": h}
+                res_label = f"Custom ({w}x{h})"
+            except ValueError:
+                print("   Invalid input. Defaulting to 1280x720.")
+        
+        config = {
+            "base_domain": base_domain,
+            "username": username,
+            "viewport_settings": viewport_settings,
+            "browser_args": browser_args,
+            "res_label": res_label
+        }
+        save_config(config)
+    else:
+        base_domain = config['base_domain']
+        username = config['username']
+        viewport_settings = config['viewport_settings']
+        browser_args = config['browser_args']
+
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_filename = f"Civitai-Refresh-Image-Resources_{timestamp}.txt"
+    log_filename = f"CivitaiRefreshLog_{timestamp}.txt"
     
     def write_log(message):
-        # Print to console and append to log file simultaneously
         print(message)
         with open(log_filename, "a", encoding="utf-8") as log_file:
             log_file.write(message + "\n")
 
-    write_log(f"--- Starting Civitai Refresh Run at {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
-    write_log(f"Targeting: {target_url}\n")
+    write_log(f"\n--- Starting Civitai Refresh Run at {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
+    post_urls = []
 
-    # Tracking Variables
+    # Start Playwright Phase
     stats = {
         "total_posts_checked": 0,
         "posts_needing_refresh": 0,
@@ -83,115 +122,115 @@ def process_civitai_profile():
 
     with sync_playwright() as p:
         user_data_dir = "./civitai_session" 
-        
         browser = p.chromium.launch_persistent_context(
-            user_data_dir, 
-            headless=False, 
-            slow_mo=100,
-            viewport=viewport_settings,  
-            args=browser_args,
+            user_data_dir, headless=False, slow_mo=100, 
+            viewport=viewport_settings, args=browser_args, 
             ignore_default_args=["--enable-automation"]
         )
-        
         page = browser.pages[0] if browser.pages else browser.new_page()
         
-        print("\nLaunching browser...")
-        page.goto(target_url)
+        # Step 1: Authentication Check
+        page.goto(f"https://{base_domain}")
+        print("================================================================")
+        print(f"                !!!!! ACTION REQUIRED !!!!!")
+        print("In the new Chromium window that just opened, login to your")
+        print("CivitAI account. If you have already logged in during previous")
+        print("uses of this program, it may have cached your login.")
+        print("     Just make sure you're logged in before continuing!")
+        print("================================================================")
+        input("\nPress Enter in this PowerShell window once you are logged in...")
+
+        # Step 2: Navigate to user's Posts tab and inject harvester
+        posts_page_url = f"https://{base_domain}/user/{username}/posts"
+        write_log(f"\nNavigating to {posts_page_url} for extraction...")
+        page.goto(posts_page_url)
+        page.wait_for_load_state("domcontentloaded")
+
+        write_log("Injecting background DOM harvester...")
         
-        print("=======================================================")
-        print("ACTION REQUIRED:")
-        print(f"1. Log in to {base_domain} if you aren't already.")
-        print(f"2. Navigate to your User Profile and your Posts page: {target_url}")
-        print("3. Wait for the initial page of posts to fully load.")
-        print("=======================================================")
+        # Javascript payload that runs continuously in the browser background
+        harvester_js = r"""
+            // Create a floating UI counter
+            const counter = document.createElement('div');
+            counter.style.cssText = 'position:fixed;top:20px;right:20px;background:#e50914;color:white;padding:12px 20px;z-index:999999;font-weight:bold;font-size:18px;border-radius:8px;box-shadow: 0 4px 6px rgba(0,0,0,0.3);font-family:sans-serif;pointer-events:none;';
+            counter.id = 'civitai-harvester-count';
+            counter.innerText = 'Posts Found: 0';
+            document.body.appendChild(counter);
+
+            // Set up the background collection bucket
+            window.civitaiPostIds = new Set();
+            
+            // Scan the screen every 500ms for post links
+            setInterval(() => {
+                document.querySelectorAll('a[href*="/posts/"]').forEach(a => {
+                    const match = a.href.match(/\/posts\/(\d+)/);
+                    if (match) {
+                        window.civitaiPostIds.add(match[1]);
+                    }
+                });
+                // Update the floating counter
+                document.getElementById('civitai-harvester-count').innerText = 'Posts Found: ' + window.civitaiPostIds.size;
+            }, 500);
+        """
+        page.evaluate(harvester_js)
+
+        print("================================================================")
+        print(f"                !!!!! ACTION REQUIRED !!!!!")
+        print("Click on the Chromium browser window again. Make sure it is on")
+        print("your user's Posts page:")
+        print("     https://{base_domain}/user/{username}/posts")
+        print("Take note of the number of posts you have on CivitAI. That number")
+        print("is shown at the top of the page, next to the Posts tab.")
+        print("Carefully scroll down through your posts. As you scroll, you will")
+        print("see a post counter in RED in the upper right corner, counting up.")
+        print("Make sure to allow the page time to load all the post's images.")
+        print("Once you get to the bottom of your Posts page, the number should")
+        print("match the number of posts you noted at the top of the page.")
+        print("Do NOT scroll back up to check the number.")
+        print("================================================================")
+        print("\nPress Enter in this PowerShell window when you have finished")
+        input("scrolling to the bottom of your posts page...")
+
+        # Step 3: Retrieve the harvested IDs
+        write_log("\nRetrieving harvested Post IDs from the browser...")
+        harvested_ids = page.evaluate("Array.from(window.civitaiPostIds)")
         
-        input("\nWhen the first page of posts is fully loaded, press Enter in this PowerShell window to begin scraping...")
-        
-        write_log("Taking over the browser to scroll and collect posts...")
-        post_urls = set()
-        last_count = 0
-        
-        # 1. Scraping Phase: Collect Post Edit URLs
-        for scroll_attempt in range(150):
-            links = []
+        for pid in harvested_ids:
+            post_urls.append(f"https://{base_domain}/posts/{pid}/edit")
             
-            for retry in range(3):
-                try:
-                    links = page.locator("a[href*='/posts/']").evaluate_all("elements => elements.map(e => e.href)")
-                    break 
-                except Exception:
-                    page.wait_for_timeout(1000) 
-            
-            for link in links:
-                match = re.search(r'/posts/(\d+)', link)
-                if match:
-                    post_id = match.group(1)
-                    post_urls.add(f"https://{base_domain}/posts/{post_id}/edit")
-            
-            page.keyboard.press("End")
-            page.wait_for_timeout(10000) 
-            
-            current_count = len(post_urls)
-            if current_count == last_count:
-                page.keyboard.press("End")
-                page.wait_for_timeout(10000)
-                
-                for retry in range(3):
-                    try:
-                        links = page.locator("a[href*='/posts/']").evaluate_all("elements => elements.map(e => e.href)")
-                        break
-                    except Exception:
-                        page.wait_for_timeout(1000)
-                        
-                for link in links:
-                    match = re.search(r'/posts/(\d+)', link)
-                    if match:
-                        post_id = match.group(1)
-                        post_urls.add(f"https://{base_domain}/posts/{post_id}/edit")
-                        
-                if len(post_urls) == last_count:
-                    break 
-                    
-            last_count = len(post_urls)
-            
-        write_log(f"Finished scrolling. Collected {len(post_urls)} unique posts.\n")
-        
-        if len(post_urls) == 0:
-            write_log("No posts found! Ensure you were on the 'Posts' tab.")
-            input("\nScript paused. Press Enter in this PowerShell window to close the browser...")
+        total_posts_found = len(post_urls)
+        write_log(f"\n--- HARVEST COMPLETE ---")
+        write_log(f"Total Posts Found: {total_posts_found}")
+
+        if not post_urls:
+            write_log("\nERROR: No posts were captured. Exiting.")
             return
 
-        # 2. Clicking Phase: Start the targeted refresh loop
-        write_log("Starting the conditional refresh loop...")
-        
-        for url in list(post_urls):
-            write_log(f"\nChecking Post: {url}")
+        # Step 4: The Refresh Loop
+        write_log("\nStarting the conditional refresh loop...")
+        for url in post_urls:
             stats["total_posts_checked"] += 1
+            write_log(f"\nChecking Post {stats['total_posts_checked']} of {total_posts_found}: {url}")
             post_needed_refresh = False
             
             try:
                 page.goto(url)
                 page.wait_for_load_state("domcontentloaded")
                 page.wait_for_timeout(3000)
-            except Exception as load_err:
-                write_log(f" -> Could not load page. Skipping. Error: {load_err}")
-                continue
-            
-            try:
+                
                 all_image_cards = page.locator(IMAGE_CARD_CONTAINER_SELECTOR)
                 card_count = all_image_cards.count()
                 
                 if card_count > 0:
                     write_log(f" -> Found {card_count} total images in this post.")
-                    images_refreshed_this_post = 0
-                    
+                    img_refreshed = 0
                     for i in range(card_count):
                         current_card = all_image_cards.nth(i)
                         
                         if current_card.get_by_text(WARNING_TEXT).is_visible():
                             write_log(f"    -> Image {i+1}: Missing resources detected. Clicking refresh.")
                             post_needed_refresh = True
-                            images_refreshed_this_post += 1
+                            img_refreshed += 1
                             stats["total_images_refreshed"] += 1
                             
                             current_card.locator("button:has(svg.tabler-icon-refresh)").click()
@@ -201,7 +240,7 @@ def process_civitai_profile():
                             
                     if post_needed_refresh:
                         stats["posts_needing_refresh"] += 1
-                        write_log(f" -> Post complete. Refreshed {images_refreshed_this_post} missing images.")
+                        write_log(f" -> Post complete. Refreshed {img_refreshed} missing images.")
                     else:
                         stats["posts_not_needing_refresh"] += 1
                         write_log(" -> Post complete. All images already had resources. None required refreshing.")
