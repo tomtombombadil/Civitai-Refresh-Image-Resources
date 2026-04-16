@@ -228,7 +228,7 @@ def process_civitai_profile():
                         current_card = all_image_cards.nth(i)
                         
                         if current_card.get_by_text(WARNING_TEXT).is_visible():
-                            write_log(f"    -> Image {i+1}: Missing resources detected. Clicking refresh.")
+                            write_log(f"    -> Image {i+1}: Missing resources detected. Refreshing.")
                             post_needed_refresh = True
                             img_refreshed += 1
                             stats["total_images_refreshed"] += 1
@@ -240,7 +240,7 @@ def process_civitai_profile():
                             
                     if post_needed_refresh:
                         stats["posts_needing_refresh"] += 1
-                        write_log(f" -> Post complete. Refreshed {img_refreshed} missing images.")
+                        write_log(f" -> Post complete. Refreshed resources for {img_refreshed} images.")
                     else:
                         stats["posts_not_needing_refresh"] += 1
                         write_log(" -> Post complete. All images already had resources. None required refreshing.")
