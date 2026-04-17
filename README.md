@@ -116,7 +116,7 @@ The program creates several files in its working directory. All filenames begin 
 
 ## Tips
 
-- **First run:** Expect it to take a while if you have hundreds of posts. The program processes every post to establish a baseline. Future runs will be much faster since you can skip already-processed posts.
+- **First run:** Expect it to take a while if you have hundreds of posts. The program processes every post, investigating every image. That's the point: leave no image without linked Resources. Future runs will be much faster since you can skip already-processed posts.
 - **If you add new posts**, you'll want to re-harvest your post list (answer "n" when asked to use the saved list) so the new posts are included. But also respond with a Y when asked if you want to skip posts that have already been processed. No need to check them again, you just want to process your new Posts.
 - **To start completely fresh**, delete the `crir_processed_posts.txt` file, or choose N when asked if you want to skip previously processed Posts.
 
