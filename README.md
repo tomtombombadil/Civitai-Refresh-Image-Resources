@@ -7,7 +7,7 @@ The purpose of this program is to fix that problem. It goes into each of your po
 ## BE ADVISED
 **This program is slow!** It takes about 1 minute to process a Post that has 20 images that need refreshed. So it could take HOURS to run through all your posts. It is safe to leave it unattended.
 The program has built-in delays for two reasons:
-1. To be polite and not HAMMER CivitAI's servers. Be cool, man.
+1. To be polite and not HAMMER CivitAI's servers. Be cool, honey bunny!
 2. CivitAI's servers are not known for being speedy and responsive. It can often take several seconds for a page to populate with data from CivitAI. The pages need to completely load before the program can process them.
 
 ## Features
