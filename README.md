@@ -4,6 +4,12 @@ This python program will cycle through your CivitAI posts and images, refreshing
 
 The purpose of this program is to fix that problem. It goes into each of your posts, and clicks the Refresh button for each image that needs it.
 
+## BE ADVISED
+**This program is slow!** It takes about 1 minute to process a Post that has 20 images that need refreshed. So it could take HOURS to run through all your posts. It is safe to leave it unattended.
+The program has built-in delays for two reasons:
+1. To be polite and not HAMMER CivitAI's servers. Be cool, man.
+2. CivitAI's servers are not known for being speedy and responsive. It can often take several seconds for a page to populate with data from CivitAI. The pages need to completely load before the program can process them.
+
 ## Features
 
 - **Supports both CivitAI domains** — works with civitai.com (standard) and civitai.red (adult/NSFW content).
@@ -21,7 +27,7 @@ The purpose of this program is to fix that problem. It goes into each of your po
 
 ## Requirements
 
-- **Windows** (the graceful Q-to-quit feature uses `msvcrt`, which is Windows-only; the rest of the script would work on other platforms but has only been tested on Windows)
+- **Windows** (the graceful Q-to-quit feature uses `msvcrt`, which is Windows-only; the rest of the script should work on other platforms but has only been tested on Windows)
 - **Python 3.10+** (you likely already have this if you run any local AI image generator)
 - **Playwright** for Python (browser automation)
 
@@ -116,13 +122,13 @@ The program creates several files in its working directory. All filenames begin 
 
 ## Notes
 
-I am *not* a programmer. 
+I am **NOT** a programmer. 
 
-I built this with the help of Google Gemini Pro (initial code generation) and Claude Opus 4.6 Extended (bug fixes, code review, and feature development). The code is 99% AI created and 1% my tweaks.
+I built this with the help of Google Gemini Pro (initial code generation) and Claude Opus 4.6 Extended (bug fixes, code review, and feature development). The code is 99% AI created and 1% my tweaks. The idea is mine. The code is AI.
 
 I cannot provide technical support for this code. This code is meant to be run on Windows. I don't know if it will work on Linux or Mac OS. Feel free to fork it and make it great on other platforms!
 
-I tested this on my own CivitAI account with several hundred posts and thousands of images. It found that **more than 52% of my images** had NO resource links and this program successfully refreshed them. Your mileage may vary — I only have one account to test with. That is a small sample size.
+I tested this on my own CivitAI account with several hundred posts and thousands of images. It found that **MORE THAN 52% OF MY IMAGES HAD NO RESOURCES LINKED** and this program successfully refreshed them. I have been posting on CivitAI since 2023. This program found posts and images all the way back with resource links missing. Your mileage may vary — I only have one account to test with. That is a small sample size.
 
 I hope you find this useful. I found CivitAI's lack of a bulk resource-refresh feature to be frustrating, so this is my workaround. The goal is simple: repair the broken links between your images and the resources used to create them, so your work gets the visibility it deserves.
 
