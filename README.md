@@ -4,6 +4,8 @@ This python program will cycle through your CivitAI posts and images, refreshing
 
 The purpose of this program is to fix that problem. It goes into each of your posts, and clicks the Refresh button for each image that needs it.
 
+In my case: this program found 74.4% of my CivitAI images did NOT have linked resources and it fixed them.
+
 ## BE ADVISED
 **This program is slow!** It takes about 1 minute to process a Post that has 20 images that need refreshed. So it could take HOURS to run through all your posts. It is safe to leave it unattended.
 The program has built-in delays for two reasons:
@@ -128,7 +130,7 @@ I built this with the help of Google Gemini Pro (initial code generation) and Cl
 
 I cannot provide technical support for this code. This code is meant to be run on Windows. I don't know if it will work on Linux or Mac OS. Feel free to fork it and make it great on other platforms!
 
-I tested this on my own CivitAI account with several hundred posts and thousands of images. It found that **MORE THAN 52% OF MY IMAGES HAD NO RESOURCES LINKED** and this program successfully refreshed them. I have been posting on CivitAI since 2023. This program found posts and images all the way back with resource links missing. Your mileage may vary — I only have one account to test with. That is a small sample size.
+I tested this on my own CivitAI account with several hundred posts and thousands of images. It found that **MORE THAN 74.4% OF MY IMAGES HAD NO RESOURCES LINKED** and this program successfully refreshed them. I have been posting on CivitAI since 2023. This program found posts and images all the way back with resource links missing. Your mileage may vary — I only have one account to test with. That is a small sample size.
 
 I hope you find this useful. I found CivitAI's lack of a bulk resource-refresh feature to be frustrating, so this is my workaround. The goal is simple: repair the broken links between your images and the resources used to create them, so your work gets the visibility it deserves.
 
